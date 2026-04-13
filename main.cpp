@@ -71,3 +71,38 @@ class XOR_Operator : public BooleanOperator {
     private:
         bool evaluate(bool a, bool b) const override { return a != b; }
 };
+
+
+class BooleanExpression{
+    private:
+        string raw;
+
+        struct SubExpression{
+            string label;
+            string op;
+            string left;
+            string right;
+        };
+
+    void analyse (const string& expression){
+    raw = expression;
+    SubExpressions.clear();
+  
+
+    tokens = tokenise(expression);
+    pos = 0;
+
+    string resultLabel = analyseExpression();
+
+    if (pos != (int)token.size())
+        throw runtime_error("Unexpected token: " + tokens[pos]);
+
+    rootLabel = resultLabel;
+
+
+    }
+
+    bool evaluate()
+};
+
+
