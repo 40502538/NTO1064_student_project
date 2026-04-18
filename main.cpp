@@ -1,5 +1,14 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <string>
+#include <vector>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <stdexcept>
+#include <memory>    
+
 using namespace std;
 
 class BooleanOperator {
@@ -74,7 +83,7 @@ class XOR_Operator : public BooleanOperator {
 
 
 class BooleanExpression{
-    private:
+    public:
         string raw;
 
         struct SubExpression{
@@ -84,25 +93,55 @@ class BooleanExpression{
             string right;
         };
 
-    void analyse (const string& expression){
-    raw = expression;
-    SubExpressions.clear();
-  
-
-    tokens = tokenise(expression);
-    pos = 0;
-
-    string resultLabel = analyseExpression();
-
-    if (pos != (int)token.size())
-        throw runtime_error("Unexpected token: " + tokens[pos]);
-
-    rootLabel = resultLabel;
+        vector<SubExpression> subExprs;
+        set<string> usedOps;
 
 
+        void parse (const string& expression){
+            raw = expression;
+            subExprs.clear();
+            usedOps.clear();
+        
+
+            tokens = tokenise(expression);
+            pos = 0;
+
+            string resultLabel = parseExpression();
+
+            if (pos != (int)tokens.size())
+                throw runtime_error("Unexpected token: " + tokens[pos]);
+
+            rootLabel = resultLabel;
+
+
+        }
+
+        bool evaluate(const map<string,bool>& vars) const {
+        return evalLabel(rootLabel, vars);
     }
+        bool evalLabel(const string& label, const map<string,bool>& vars) const {
+        // Is it a variable?
+        if (label == "A" || label == "B" || label == "C") {
+            auto it = vars.find(label);
+            return (it != vars.end()) ? it->second : false;
+        }
+    
+        for (const auto& se : subExprs) {
+            if (se.label == label) {
+                if (se.op == "VAR") {
+                    return vars.at(se.left);
+                }
+                bool lv = evalLabel(se.left, vars);
+                if (se.op == "NOT") return !lv;
+                bool rv = evalLabel(se.right, vars);
+                if (se.op == "AND")  return lv && rv;
+                if (se.op == "OR")   return lv || rv;
+                if (se.op == "XOR")  return lv != rv;
+                if (se.op == "NAND") return !(lv && rv);
+                if (se.op == "NOR")  return !(lv || rv);
+            }
+        }
 
-    bool evaluate()
 };
 
 
