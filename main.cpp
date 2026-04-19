@@ -333,6 +333,17 @@ private:
     
 };
 
+//* Section 5 - Operator Factory *//
+
+unique_ptr<BoolOperator> makeOperator(const string& name) {
+    if (name == "AND")  return make_unique<AndOperator>();
+    if (name == "OR")   return make_unique<OrOperator>();
+    if (name == "NOT")  return make_unique<NotOperator>();
+    if (name == "XOR")  return make_unique<XorOperator>();
+    if (name == "NAND") return make_unique<NandOperator>();
+    if (name == "NOR")  return make_unique<NorOperator>();
+    throw runtime_error("Unknown operator: " + name);
+}
 
 
 
