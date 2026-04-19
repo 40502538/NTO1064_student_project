@@ -121,7 +121,7 @@ class BooleanExpression{
         }
     
         bool evalLabel(const string& label, const map<string,bool>& vars) const {
-        // Is it a variable?
+      
         if (label == "A" || label == "B" || label == "C") {
             auto it = vars.find(label);
             return (it != vars.end()) ? it->second : false;
@@ -218,7 +218,7 @@ vector<string> tokenise(const string& s){
         }
         if (tok == "A" || tok == "B" || tok == "C") {
             pos++;
-            return tok; // variables are leaf nodes
+            return tok; 
         }
          throw runtime_error("Unknown token: " + tok);
     }
@@ -245,7 +245,7 @@ class TruthTable{
         printRow(out, buildHeaderCells());
         printSeparator(out);
 
-        // --- data rows ---
+      
         for (auto& row : rows)
             printRow(out, row);
 
@@ -253,11 +253,28 @@ class TruthTable{
     }
     const vector<string>&   getColumns() const { return cols; }
     const vector<vector<string>>&   getRows()    const { return rows; }
+
 private:
     vector<string>         vars;
     vector<string>         cols;   
     vector<vector<string>> rows;
     string                 rootCol;
+
+    vector<string> buildColumns(BoolExpression& expr) {
+        vector<string> result;
+        
+        for (auto& v : vars) result.push_back(v);
+        for (auto& se : expr.subExprs)
+            if (se.label != expr.getRootLabel())
+                result.push_back(se.label);
+        result.push_back(expr.getRootLabel());
+        return result;
+    }
+
+    vector<vector<string>> buildRows(BoolExpression& expr) {
+        int n       = (int)vars.size();
+        int combos  = 1 << n;             
+        vector<vector<string>> result;
 }
 
 
