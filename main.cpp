@@ -230,6 +230,36 @@ vector<string> tokenise(const string& s){
     }
 };
 
+class TruthTable{
+    public:
+        void generate(BooleanExpression& expr){
+            vars = expr.usedVars();
+            cols = buildColumns(expr);
+            rows = buildRows(expr);
+            rootCol = expr.getRootLabel();
+        }
+
+        void print(ostream& out) const {
+       
+        out << "\n";
+        printRow(out, buildHeaderCells());
+        printSeparator(out);
+
+        // --- data rows ---
+        for (auto& row : rows)
+            printRow(out, row);
+
+        out << "\n";
+    }
+    const vector<string>&   getColumns() const { return cols; }
+    const vector<vector<string>>&   getRows()    const { return rows; }
+private:
+    vector<string>         vars;
+    vector<string>         cols;   
+    vector<vector<string>> rows;
+    string                 rootCol;
+}
+
 
 
 
