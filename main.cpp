@@ -294,7 +294,39 @@ private:
         }
         return result;
     }
-}
+    vector<string> buildHeaderCells() const { return cols; }
+
+    
+    int colWidth(int i) const {
+        int w = (int)cols[i].size();
+        return max(w, 3);
+    }
+
+    void printRow(ostream& out, const vector<string>& cells) const {
+        out << "|";
+        for (int i = 0; i < (int)cols.size(); i++) {
+            int   w    = colWidth(i);
+            
+            int   len  = (int)cells[i].size();
+            int   pad  = w - len;
+            int   left = pad / 2;
+            int   right= pad - left;
+            out << " " << string(left,' ') << cells[i] << string(right,' ') << " |";
+        }
+        out << "\n";
+    }
+
+    void printSeparator(ostream& out) const {
+        out << "|";
+        for (int i = 0; i < (int)cols.size(); i++) {
+            int w = colWidth(i);
+            out << "-" << string(w, '-') << "-|";
+        }
+        out << "\n";
+    }
+    
+};
+
 
 
 
