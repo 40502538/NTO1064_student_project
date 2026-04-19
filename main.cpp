@@ -106,7 +106,7 @@ class BooleanExpression{
             tokens = tokenise(expression);
             pos = 0;
 
-            string resultLabel = parseExpressions();
+            string resultLabel = parseExprs();
 
             if (pos != (int)tokens.size())
                 throw runtime_error("Unexpected token: " + tokens[pos]);
@@ -241,16 +241,16 @@ class TruthTable{
 
         void print(ostream& out) const {
        
-        out << "\n";
-        printRow(out, buildHeaderCells());
-        printSeparator(out);
+            out << "\n";
+            printRow(out, buildHeaderCells());
+            printSeparator(out);
 
-      
-        for (auto& row : rows)
-            printRow(out, row);
+        
+            for (auto& row : rows)
+                printRow(out, row);
 
-        out << "\n";
-    }
+            out << "\n";
+        }
     const vector<string>&   getColumns() const { return cols; }
     const vector<vector<string>>&   getRows()    const { return rows; }
 
@@ -275,6 +275,25 @@ private:
         int n       = (int)vars.size();
         int combos  = 1 << n;             
         vector<vector<string>> result;
+
+        for (int mask = 0; mask < combos; mask++) {
+            
+            map<string,bool> assignment;
+            for (int i = 0; i < n; i++) {
+                
+                bool val = (mask >> (n - 1 - i)) & 1;
+                assignment[vars[i]] = val;
+            }
+
+            vector<string> row;
+            for (auto& col : cols) {
+                bool val = expr.evalLabel(col, assignment);
+                row.push_back(val ? "1" : "0");
+            }
+            result.push_back(row);
+        }
+        return result;
+    }
 }
 
 
