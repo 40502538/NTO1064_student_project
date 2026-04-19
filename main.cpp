@@ -165,3 +165,27 @@ private:
     int pos;
     string rootLabel;
 
+vector<string> tokenise(const string& s){
+    vector<string> result;
+    istringstream  iss(s);
+    string         word;
+    while (iss >> word) {
+      
+        transform(word.begin(), word.end(), word.begin(), ::toupper);
+        
+        string prefix, core, suffix;
+        size_t start = 0;
+        while (start < word.size() && word[start] == '(') { prefix += '('; start++; }
+        size_t end = word.size();
+        while (end > start && word[end-1] == ')') { suffix += ')'; end--; }
+        core = word.substr(start, end - start);
+        for (char c : prefix)  result.push_back(string(1,c));
+        if (!core.empty())     result.push_back(core);
+        for (char c : suffix)  result.push_back(string(1,c));
+    }
+    return result;
+}
+
+
+
+
