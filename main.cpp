@@ -439,6 +439,24 @@ int main(){
         TruthTable table;
         table.generate(expr);
         table.print(cout);
+        
+        // Save
+        cout << "Save to file? (Y/N): ";
+        string answer;
+        getline(cin, answer);
+        transform(answer.begin(), answer.end(), answer.begin(), ::toupper);
+        if (!answer.empty() && answer[0] == 'Y') {
+            cout << "Enter filename: ";
+            string fname;
+            getline(cin, fname);
+            while (!fname.empty() && isspace(fname.front())) fname.erase(fname.begin());
+            if (!fname.empty()) {
+                try { saveToFile(fname, expr, table, explanations); }
+                catch (exception& e) { cout << "Error saving: " << e.what() << "\n"; }
+            }
+        }
+
+        cout << "\n";
 
         
 
