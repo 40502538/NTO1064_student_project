@@ -118,7 +118,8 @@ class BooleanExpression{
 
         bool evaluate(const map<string,bool>& vars) const {
         return evalLabel(rootLabel, vars);
-    }
+        }
+    
         bool evalLabel(const string& label, const map<string,bool>& vars) const {
         // Is it a variable?
         if (label == "A" || label == "B" || label == "C") {
@@ -141,7 +142,26 @@ class BooleanExpression{
                 if (se.op == "NOR")  return !(lv || rv);
             }
         }
+        throw runtime_error("Unknown label: " + label);
+    }
+    string getRootLabel() const { return rootLabel; }
 
-};
 
+    vector<string> usedVars() const {
+        set<string> vs;
+        for (auto& t : tokens) if (t=="A"||t=="B"||t=="C") vs.insert(t);
+        return vector<string>(vs.begin(), vs.end());
+    }
+    
+    int operatorCount() const {
+        int cnt = 0;
+        for (auto& se : subExprs)
+            if (se.op != "VAR") cnt++;
+        return cnt;
+    }
+
+private:
+    vector<string> tokens;
+    int pos;
+    string rootLabel;
 
