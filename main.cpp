@@ -395,6 +395,11 @@ int main(){
         while (!line.empty() && isspace(line.back()))  line.pop_back();
 
         if (line.empty()) continue;
+
+        // Quit
+        string upper = line;
+        transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
+        if (upper == "QUIT") break;
     }
 
 }
