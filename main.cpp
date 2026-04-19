@@ -410,6 +410,14 @@ int main(){
             continue;
     }
 
+    BoolExpression expr;
+        try {
+            expr.parse(line);
+        } catch (exception& e) {
+            cout << "Parse error: " << e.what() << "\n\n";
+            continue;
+        }
+
 }
 
 
