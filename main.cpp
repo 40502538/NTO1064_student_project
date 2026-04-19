@@ -400,6 +400,14 @@ int main(){
         string upper = line;
         transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
         if (upper == "QUIT") break;
+
+        // Load
+        if (upper.substr(0, 5) == "LOAD ") {
+            string fname = line.substr(5);
+            while (!fname.empty() && isspace(fname.front())) fname.erase(fname.begin());
+            try { loadFromFile(fname); }
+            catch (exception& e) { cout << "Error: " << e.what() << "\n"; }
+            continue;
     }
 
 }
