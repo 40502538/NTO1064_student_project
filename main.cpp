@@ -106,7 +106,7 @@ class BooleanExpression{
             tokens = tokenise(expression);
             pos = 0;
 
-            string resultLabel = parseExpression();
+            string resultLabel = parseExpressions();
 
             if (pos != (int)tokens.size())
                 throw runtime_error("Unexpected token: " + tokens[pos]);
@@ -185,6 +185,50 @@ vector<string> tokenise(const string& s){
     }
     return result;
 }
+    string parseExpr() {
+        string left = parseTerm();
+
+        while (pos < (int)tokens.size()) {
+            string op = tokens[pos];
+            if (op!="AND" && op!="OR" && op!="XOR" && op!="NAND" && op!="NOR")
+                break;
+            pos++;
+            string right = parseTerm();
+
+            string label = left + " " + op + " " + right;
+            registerSubExpr(label, op, left, right);
+            usedOps.insert(op);
+            left = label;
+        }
+        return left;
+    }
+    string parseTerm() {
+        if (pos >= (int)tokens.size())
+            throw runtime_error("Unexpected end of expression");
+
+        string tok = tokens[pos];
+
+        if (tok == "NOT") {
+            pos++;
+            string operand = parseTerm();
+            string label   = "NOT " + operand;
+            registerSubExpr(label, "NOT", operand, "");
+            usedOps.insert("NOT");
+            return label;
+        }
+        if (tok == "A" || tok == "B" || tok == "C") {
+            pos++;
+            return tok; // variables are leaf nodes
+        }
+         throw runtime_error("Unknown token: " + tok);
+    }
+    void registerSubExpr(const string& label, const string& op,
+                          const string& left,  const string& right) {
+        for (auto& se : subExprs)
+            if (se.label == label) return;
+        subExprs.push_back({label, op, left, right});
+    }
+};
 
 
 
