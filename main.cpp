@@ -345,6 +345,13 @@ unique_ptr<BoolOperator> makeOperator(const string& name) {
     throw runtime_error("Unknown operator: " + name);
 }
 
+//* Section 6 - File Save *//
+
+void saveToFile(const string& filename,
+                const BoolExpression& expr,
+                const TruthTable& table,
+                const string& explanations)
+
 
 
 
