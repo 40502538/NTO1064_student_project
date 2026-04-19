@@ -11,6 +11,7 @@
 
 using namespace std;
 
+//*Section 1 - Base Class*//
 class BooleanOperator {
     public:
         virtual bool evaluate(bool a, bool b = false)  const = 0; 
@@ -21,6 +22,7 @@ class BooleanOperator {
         virtual ~BooleanOperator() {}
 };
 
+//*Section 2 - Derived Operator Classes*//
 class AND_Operator : public BooleanOperator {
     public: 
         string getName()              const override {return "AND";}
@@ -81,19 +83,19 @@ class XOR_Operator : public BooleanOperator {
         bool evaluate(bool a, bool b) const override { return a != b; }
 };
 
-
+//*Section 3 - Expression Parser and Evaluator*//
 class BooleanExpression{
     public:
-        string raw;
+        string raw;                     // original expression
 
-        struct SubExpression{
-            string label;
-            string op;
-            string left;
-            string right;
+        struct SubExpr{
+            string label;               // column header
+            string op;                  // boolean operators
+            string left;                // left operand label
+            string right;               // right operand label
         };
 
-        vector<SubExpression> subExprs;
+        vector<SubExpr> subExprs;
         set<string> usedOps;
 
 
@@ -106,14 +108,12 @@ class BooleanExpression{
             tokens = tokenise(expression);
             pos = 0;
 
-            string resultLabel = parseExprs();
+            string resultLabel = parseExpr();
 
             if (pos != (int)tokens.size())
                 throw runtime_error("Unexpected token: " + tokens[pos]);
 
             rootLabel = resultLabel;
-
-
         }
 
         bool evaluate(const map<string,bool>& vars) const {
@@ -144,8 +144,8 @@ class BooleanExpression{
         }
         throw runtime_error("Unknown label: " + label);
     }
-    string getRootLabel() const { return rootLabel; }
 
+    string getRootLabel() const { return rootLabel; }
 
     vector<string> usedVars() const {
         set<string> vs;
@@ -165,26 +165,29 @@ private:
     int pos;
     string rootLabel;
 
-vector<string> tokenise(const string& s){
-    vector<string> result;
-    istringstream  iss(s);
-    string         word;
-    while (iss >> word) {
-      
-        transform(word.begin(), word.end(), word.begin(), ::toupper);
+    //tokeniser
+    vector<string> tokenise(const string& s){
+        vector<string> result;
+        istringstream  iss(s);
+        string         word;
+        while (iss >> word) {
         
-        string prefix, core, suffix;
-        size_t start = 0;
-        while (start < word.size() && word[start] == '(') { prefix += '('; start++; }
-        size_t end = word.size();
-        while (end > start && word[end-1] == ')') { suffix += ')'; end--; }
-        core = word.substr(start, end - start);
-        for (char c : prefix)  result.push_back(string(1,c));
-        if (!core.empty())     result.push_back(core);
-        for (char c : suffix)  result.push_back(string(1,c));
+            transform(word.begin(), word.end(), word.begin(), ::toupper);
+            
+            string prefix, core, suffix;
+            size_t start = 0;
+            while (start < word.size() && word[start] == '(') { prefix += '('; start++; }
+            size_t end = word.size();
+            while (end > start && word[end-1] == ')') { suffix += ')'; end--; }
+            core = word.substr(start, end - start);
+            for (char c : prefix)  result.push_back(string(1,c));
+            if (!core.empty())     result.push_back(core);
+            for (char c : suffix)  result.push_back(string(1,c));
+        }
+        return result;
     }
-    return result;
-}
+
+
     string parseExpr() {
         string left = parseTerm();
 
@@ -230,6 +233,8 @@ vector<string> tokenise(const string& s){
     }
 };
 
+
+//* Section 4 - Truth Table *//
 class TruthTable{
     public:
         void generate(BooleanExpression& expr){
@@ -294,9 +299,10 @@ private:
         }
         return result;
     }
-    vector<string> buildHeaderCells() const { return cols; }
 
-    
+
+    vector<string> buildHeaderCells() const { return cols; }
+  
     int colWidth(int i) const {
         int w = (int)cols[i].size();
         return max(w, 3);
