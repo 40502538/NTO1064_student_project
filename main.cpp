@@ -352,6 +352,20 @@ void saveToFile(const string& filename,
                 const TruthTable& table,
                 const string& explanations)
 
+{
+    ofstream f(filename);
+    if (!f) throw runtime_error("Cannot open file: " + filename);
+
+    f << "=== BOOLEAN EXPRESSION SIMULATOR ===\n\n";
+    f << "Expression : " << expr.raw << "\n\n";
+    f << "Operators Detected:\n" << explanations << "\n";
+    f << "Truth Table:\n";
+    table.print(f);
+
+    f.close();
+    cout << "\nSaved to \"" << filename << "\" successfully!\n";
+}
+
 
 
 
