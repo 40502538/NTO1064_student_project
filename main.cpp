@@ -265,7 +265,7 @@ private:
     vector<vector<string>> rows;
     string                 rootCol;
 
-    vector<string> buildColumns(BoolExpression& expr) {
+    vector<string> buildColumns(BooleanExpression& expr) {
         vector<string> result;
         
         for (auto& v : vars) result.push_back(v);
@@ -276,7 +276,7 @@ private:
         return result;
     }
 
-    vector<vector<string>> buildRows(BoolExpression& expr) {
+    vector<vector<string>> buildRows(BooleanExpression& expr) {
         int n       = (int)vars.size();
         int combos  = 1 << n;             
         vector<vector<string>> result;
@@ -335,20 +335,20 @@ private:
 
 //* Section 5 - Operator Factory *//
 
-unique_ptr<BoolOperator> makeOperator(const string& name) {
-    if (name == "AND")  return make_unique<AndOperator>();
-    if (name == "OR")   return make_unique<OrOperator>();
-    if (name == "NOT")  return make_unique<NotOperator>();
-    if (name == "XOR")  return make_unique<XorOperator>();
-    if (name == "NAND") return make_unique<NandOperator>();
-    if (name == "NOR")  return make_unique<NorOperator>();
+unique_ptr<BooleanOperator> makeOperator(const string& name) {
+    if (name == "AND")  return make_unique<AND_Operator>();
+    if (name == "OR")   return make_unique<OR_Operator>();
+    if (name == "NOT")  return make_unique<NOT_Operator>();
+    if (name == "XOR")  return make_unique<XOR_Operator>();
+    if (name == "NAND") return make_unique<NAND_Operator>();
+    if (name == "NOR")  return make_unique<NOR_Operator>();
     throw runtime_error("Unknown operator: " + name);
 }
 
 //* Section 6 - File Save *//
 
 void saveToFile(const string& filename,
-                const BoolExpression& expr,
+                const BooleanExpression& expr,
                 const TruthTable& table,
                 const string& explanations)
 
@@ -410,13 +410,20 @@ int main(){
             continue;
     }
 
-    BoolExpression expr;
+    BooleanExpression expr;
         try {
             expr.parse(line);
         } catch (exception& e) {
             cout << "Parse error: " << e.what() << "\n\n";
             continue;
         }
+
+        if (expr.operatorCount() > 3) {
+            cout << "Error: Expression has more than 3 operators. Please simplify.\n\n";
+            continue;
+        }
+
+        
 
 }
 
