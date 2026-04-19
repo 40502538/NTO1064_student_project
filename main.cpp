@@ -376,5 +376,28 @@ void loadFromFile(const string& filename) {
     cout << "--- End of file ---\n\n";
 }
 
+//* Section 7 - Main Loop *//
+
+int main(){
+    cout << "\n*** BOOLEAN TRUTH TABLE SIMULATOR ***\n\n";
+    cout << "Commands:\n";
+    cout << "  Type an expression to evaluate  (e.g.  (A AND B) OR (NOT C))\n";
+    cout << "  Type  LOAD <filename>           to load a saved file\n";
+    cout << "  Type  QUIT                      to exit\n\n";
+
+    while (true) {
+        cout << "Enter Boolean Expression: ";
+        string line;
+        if (!getline(cin, line)) break;
+
+        // Trim whitespace
+        while (!line.empty() && isspace(line.front())) line.erase(line.begin());
+        while (!line.empty() && isspace(line.back()))  line.pop_back();
+
+        if (line.empty()) continue;
+    }
+
+}
+
 
 
