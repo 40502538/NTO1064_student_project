@@ -423,6 +423,17 @@ int main(){
             continue;
         }
 
+        cout << "\nOperators Detected and Explained:\n";
+        string explanations;
+        for (const string& opName : expr.usedOps) {
+            try {
+                auto op = makeOperator(opName);
+                string line = "  - " + op->getExplanation() + "\n";
+                cout << line;
+                explanations += line;
+            } catch (...) {}
+        }
+
         
 
 }
