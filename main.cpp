@@ -434,6 +434,12 @@ int main(){
             } catch (...) {}
         }
 
+        // Truth Table
+        cout << "\nGenerating Truth Table...\n";
+        TruthTable table;
+        table.generate(expr);
+        table.print(cout);
+
         
 
 }
