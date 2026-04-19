@@ -1,3 +1,5 @@
+// NTO1064 Student Project: Boolean Expression & Truth Table Simulator (C++ OOP)//
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
