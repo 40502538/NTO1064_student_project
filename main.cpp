@@ -366,6 +366,15 @@ void saveToFile(const string& filename,
     cout << "\nSaved to \"" << filename << "\" successfully!\n";
 }
 
+void loadFromFile(const string& filename) {
+    ifstream f(filename);
+    if (!f) throw runtime_error("Cannot open file: " + filename);
+
+    cout << "\n--- Loaded from \"" << filename << "\" ---\n";
+    string line;
+    while (getline(f, line)) cout << line << "\n";
+    cout << "--- End of file ---\n\n";
+}
 
 
 
