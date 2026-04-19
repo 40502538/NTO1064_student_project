@@ -457,8 +457,10 @@ int main(){
         }
 
         cout << "\n";
+    }
 
-        
+    cout << "Goodbye!\n";
+    return 0;
 
 }
 
